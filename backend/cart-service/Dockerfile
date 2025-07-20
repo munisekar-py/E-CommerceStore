@@ -1,8 +1,8 @@
 # Base image
-FROM node:18
+FROM node:18-alpine
 
 # Set working directory
-WORKDIR /
+WORKDIR /app
 
 # Copy and install dependencies
 COPY package*.json ./
