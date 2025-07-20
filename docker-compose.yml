@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   user-service:
-    build: ./user-service
+    build: ./backend/user-service
     ports:
       - "3001:3001"
     environment:
@@ -10,7 +10,7 @@ services:
       - MONGODB_URI=mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_users
    
   product-service:
-    build: ./product-service
+    build: ./backend/product-service
     ports:
       - "3002:3002"
     environment:
@@ -19,7 +19,7 @@ services:
 
 
   cart-service:
-    build: ./cart-service
+    build: ./backend/cart-service
     ports:
       - "3003:3003"
     environment:
@@ -30,7 +30,7 @@ services:
       - product-service
 
   order-service:
-    build: ./order-service
+    build: ./backend/order-service
     ports:
       - "3004:3004"
     environment:
