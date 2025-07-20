@@ -1,2 +1,18 @@
-PORT=3002
-MONGODB_URI=mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_products
+# Base image
+FROM node:18
+
+# Set working directory
+WORKDIR /
+
+# Copy and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the service port
+EXPOSE 3002
+
+# Run the application
+CMD ["node", "server.js"]
