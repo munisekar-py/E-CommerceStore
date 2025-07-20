@@ -32,7 +32,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy built React app from builder
 
-COPY --from=builder /public/* /usr/share/nginx/html
+COPY --from=builder /frontend/public/* /usr/share/nginx/html
 
 # Copy custom nginx config (optional)
 
