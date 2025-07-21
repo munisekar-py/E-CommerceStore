@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds') // Jenkins credentials
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
     AWS_ACCESS_KEY_ID = credentials('aws-access-key')
     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
     AWS_REGION = 'us-west-2'
@@ -47,12 +47,10 @@ pipeline {
       }
     }
 
-
-
     stage('Configure kubeconfig') {
       steps {
         sh '''
-          aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
+        aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
         '''
       }
     }
@@ -60,11 +58,11 @@ pipeline {
     stage('Deploy Backend Services to EKS') {
       steps {
         sh '''
-          kubectl apply -f k8s/user-deployment.yaml
-          kubectl apply -f k8s/user-service.yaml
-          kubectl apply -f k8s/product-service.yaml
-          kubectl apply -f k8s/cart-service.yaml
-          kubectl apply -f k8s/order-service.yaml
+        kubectl apply -f k8s/user-deployment.yaml
+        kubectl apply -f k8s/user-service.yaml
+        kubectl apply -f k8s/product-service.yaml
+        kubectl apply -f k8s/cart-service.yaml
+        kubectl apply -f k8s/order-service.yaml
         '''
       }
     }
@@ -72,7 +70,7 @@ pipeline {
     stage('Deploy Ingress for Backend') {
       steps {
         sh '''
-          kubectl apply -f k8s/backend-ingress.yaml
+        kubectl apply -f k8s/backend-ingress.yaml
         '''
       }
     }
@@ -80,22 +78,20 @@ pipeline {
     stage('Deploy Frontend') {
       steps {
         sh '''
-          kubectl apply -f k8s/frontend-deployment.yaml
-          kubectl apply -f k8s/frontend-service.yaml
-          kubectl apply -f k8s/frontend-ingress.yaml
+        kubectl apply -f k8s/frontend-deployment.yaml
+        kubectl apply -f k8s/frontend-service.yaml
+        kubectl apply -f k8s/frontend-ingress.yaml
         '''
       }
     }
-    post {
-        failure {
-            echo 'Build Failed!'
-         }
-        success {
-            echo 'Pipeline completed successfully!'
-            }
-        }
+  }
+
+  post {
+    failure {
+      echo 'Build Failed!'
     }
+    success {
+      echo 'Pipeline completed successfully!'
+    }
+  }
 }
-
-
-
