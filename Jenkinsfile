@@ -34,7 +34,7 @@ pipeline {
         }
       }
     }
-    }
+    
 
     stage('Provision EKS Cluster') {
       steps {
