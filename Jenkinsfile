@@ -16,8 +16,9 @@ pipeline {
         script {
           def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
           for (svc in services) {
-            sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./${svc}"
+            sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
           }
+	sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./frontend/${svc}"
         }
       }
     }
@@ -28,8 +29,10 @@ pipeline {
           sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
           def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
           for (svc in services) {
-            sh "docker push $DOCKERHUB_CREDENTIALS_USR/${svc}:latest"
+		sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+		sh "docker push $DOCKERHUB_CREDENTIALS_USR/${svc}:latest"
           }
+	sh "docker push $DOCKERHUB_CREDENTIALS_USR/frontend:latest"
         }
       }
     }
