@@ -13,7 +13,7 @@ pipeline {
    stage('Build Docker Images') {
       steps {
         script {
-          def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
+          def services = ['user-service', 'product-service', 'cart-service', 'order-service']
           for (svc in services) {
             sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
           }
