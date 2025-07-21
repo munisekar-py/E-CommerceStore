@@ -1,5 +1,5 @@
 pipeline {
-  agent Muni_Agent
+  agent any
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-muni')
