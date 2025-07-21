@@ -16,7 +16,7 @@ spec:
         - name: frontend
           image: munisekar/frontend-service:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 80
           env:
             - name: REACT_APP_USER_SERVICE_URL
               value: "http://localhost:3001"
