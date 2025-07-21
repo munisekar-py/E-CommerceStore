@@ -50,6 +50,14 @@ pipeline {
       }
     }
 */
+
+   stage('Check Tools') {
+     steps {
+      sh 'which kubectl || echo "kubectl not found"'
+      sh 'kubectl version --client || echo "kubectl broken"'
+      sh 'env'
+      }
+   }
     stage('Configure kubeconfig') {
       steps {
         sh '''
