@@ -16,9 +16,9 @@ pipeline {
         script {
           def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
           for (svc in services) {
-            sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
+            sh "docker buildx -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
           }
-	sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./frontend/${svc}"
+	sh "docker buildx -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./frontend/${svc}"
         }
       }
     }
