@@ -27,7 +27,7 @@ pipeline {
     steps {
       script {
         sh """
-          echo \$DOCKERHUB_CREDENTIALS_PAS | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
+          echo \$DOCKERHUB_CREDENTIALS_PAW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
         """
         def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
         for (svc in services) {
