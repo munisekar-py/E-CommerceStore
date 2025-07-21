@@ -1,5 +1,5 @@
 pipeline {
-  agent any
+  agent agent_1_rbrk
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-muni')
