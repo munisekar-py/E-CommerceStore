@@ -36,7 +36,7 @@ pipeline {
       }
     }
    }
-
+/*
     stage('Provision EKS Cluster') {
       steps {
         sh '''
@@ -49,7 +49,7 @@ pipeline {
         '''
       }
     }
-
+*/
     stage('Configure kubeconfig') {
       steps {
         sh '''
