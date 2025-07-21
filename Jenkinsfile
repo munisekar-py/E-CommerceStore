@@ -25,16 +25,17 @@ pipeline {
 
    stage('Push to Docker Hub') {
     steps {
-      sh """
-          echo \$DOCKERHUB_CREDENTIALS_PSW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
+      script {
+        sh """
+          echo \$DOCKERHUB_CREDENTIALS_PAS | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
         """
         def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
-         for (svc in services) {
+        for (svc in services) {
           sh "docker push \$DOCKERHUB_CREDENTIALS_USR/${svc}:latest"
         }
       }
     }
-    
+   }
 
     stage('Provision EKS Cluster') {
       steps {
