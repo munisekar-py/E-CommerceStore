@@ -21,8 +21,6 @@ spec:
             - name: MONGODB_URI
               value: "mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_users"
               JWT_SECRET: "5c0253bfa3df2ce26bd2f6dca2789117"
-            #- configMapRef:
-             #   name: user-service
            envFrom:
              - configMapRef:
                name: user-service
