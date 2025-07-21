@@ -25,12 +25,13 @@ pipeline {
 
    stage('Push to Docker Hub') {
     steps {
-     script {
-      sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
-      def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
-      for (svc in services) {
-        sh "docker push $DOCKERHUB_CREDENTIALS_USR/${svc}:latest"
-      	}
+      sh """
+          echo \$DOCKERHUB_CREDENTIALS_PSW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
+        """
+        def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
+        for (svc in services) {
+          sh "docker push \$DOCKERHUB_CREDENTIALS_USR/${svc}:latest"
+        }
       }
     }
     }
