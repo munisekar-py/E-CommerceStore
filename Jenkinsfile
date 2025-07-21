@@ -2,9 +2,9 @@ pipeline {
   agent any
 
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-    AWS_ACCESS_KEY_ID = credentials('aws-access-key')
-    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-muni')
+    AWS_ACCESS_KEY_ID = credentials('aws-access-key-muni')
+    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key-muni')
     AWS_REGION = 'us-west-2'
     CLUSTER_NAME = 'munish-ecommerce-cluster'
   }
