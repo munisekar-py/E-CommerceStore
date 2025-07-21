@@ -7,22 +7,46 @@ pipeline {
     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key-muni')
     AWS_REGION = 'us-west-2'
     CLUSTER_NAME = 'munish-ecommerce-cluster'
+    DOCKER_CONFIG = '/var/lib/jenkins/.docker' // ensure correct config path
   }
 
 stages {
 
-stage('Install Buildx') {
+
+    stage('Install Buildx') {
       steps {
         sh '''
-          mkdir -p ~/.docker/cli-plugins
+          export DOCKER_CLI_EXPERIMENTAL=enabled
+          mkdir -p $DOCKER_CONFIG/cli-plugins
           curl -sSL https://github.com/docker/buildx/releases/latest/download/buildx-linux-amd64 \
-            -o ~/.docker/cli-plugins/docker-buildx
-          chmod +x ~/.docker/cli-plugins/docker-buildx
-
+            -o $DOCKER_CONFIG/cli-plugins/docker-buildx
+          chmod +x $DOCKER_CONFIG/cli-plugins/docker-buildx
+          export PATH=$DOCKER_CONFIG/cli-plugins:$PATH
           docker buildx version
         '''
       }
-}
+    }
+
+    stage('Build Docker Images') {
+      steps {
+        script {
+          def services = ['user-service', 'product-service', 'cart-service', 'order-service']
+          for (svc in services) {
+            sh """
+              export PATH=$DOCKER_CONFIG/cli-plugins:\$PATH
+              docker buildx create --use --name mybuilder || true
+              docker buildx inspect mybuilder --bootstrap
+              docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}
+            """
+          }
+          // Build frontend
+          sh """
+            export PATH=$DOCKER_CONFIG/cli-plugins:\$PATH
+            docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/frontend:latest ./frontend
+          """
+        }
+      }
+    }
 
     stage('Build Docker Images') {
       steps {
