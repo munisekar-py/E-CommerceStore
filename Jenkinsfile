@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+ agent {
+  docker {
+    image 'docker:24.0.5-dind' // or a buildx-enabled image
+    args '-v /var/run/docker.sock:/var/run/docker.sock'
+  }
+}
 
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-muni')
@@ -7,44 +12,21 @@ pipeline {
     AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key-muni')
     AWS_REGION = 'us-west-2'
     CLUSTER_NAME = 'munish-ecommerce-cluster'
-    DOCKER_CONFIG = '/var/lib/jenkins/.docker' // ensure correct config path
   }
 
-stages {
-  stage('Install Buildx') {
-     steps {
-        sh '''
-          export DOCKER_CLI_EXPERIMENTAL=enabled
-          mkdir -p $DOCKER_CONFIG/cli-plugins
-          curl -sSL https://github.com/docker/buildx/releases/latest/download/buildx-linux-amd64 \
-            -o $DOCKER_CONFIG/cli-plugins/docker-buildx
-          chmod +x $DOCKER_CONFIG/cli-plugins/docker-buildx
-          export PATH=$DOCKER_CONFIG/cli-plugins:$PATH
-          docker buildx version
-        '''
-      }
-    }
-
-    stage('Build Docker Images') {
+ stages {
+   stage('Build Docker Images') {
       steps {
         script {
-          def services = ['user-service', 'product-service', 'cart-service', 'order-service']
+          def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
           for (svc in services) {
-            sh """
-              export PATH=$DOCKER_CONFIG/cli-plugins:\$PATH
-              docker buildx create --use --name mybuilder || true
-              docker buildx inspect mybuilder --bootstrap
-              docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}
-            """
+            sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
           }
-          // Build frontend
-          sh """
-            export PATH=$DOCKER_CONFIG/cli-plugins:\$PATH
-            docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/frontend:latest ./frontend
-          """
+	sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./frontend/${svc}"
         }
       }
     }
+
 
     stage('Push to Docker Hub') {
       steps {
