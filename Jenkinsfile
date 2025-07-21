@@ -16,7 +16,11 @@ pipeline {
         script {
           def services = ['user-service', 'product-service', 'cart-service', 'order-service', 'frontend']
           for (svc in services) {
-            sh "docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}"
+		sh '''
+		docker buildx create --use --name mybuilder --driver docker-container || true
+          	docker buildx inspect mybuilder --bootstrap
+          	docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./backend/${svc}
+        	'''            
           }
 	sh "docker buildx build --load -t $DOCKERHUB_CREDENTIALS_USR/${svc}:latest ./frontend/${svc}"
         }
