@@ -11,10 +11,8 @@ pipeline {
   }
 
 stages {
-
-
-    stage('Install Buildx') {
-      steps {
+  stage('Install Buildx') {
+     steps {
         sh '''
           export DOCKER_CLI_EXPERIMENTAL=enabled
           mkdir -p $DOCKER_CONFIG/cli-plugins
