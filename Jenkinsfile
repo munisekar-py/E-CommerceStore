@@ -22,21 +22,6 @@ stage('Install Buildx') {
           docker buildx version
         '''
       }
-    }
-	
-  stage('Debug Docker Environment') {
-   steps {
-    sh '''
-      echo "Docker version:"
-      docker version
-
-      echo "Docker buildx version:"
-      docker buildx version
-
-      echo "Available builders:"
-      docker buildx ls
-    '''
-  }
 }
 
     stage('Build Docker Images') {
