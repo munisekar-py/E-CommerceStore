@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product
+          image: munisekar/product-service:latest
+          ports:
+            - containerPort: 3002
+          env:
+            - name: MONGODB_URI
+              value: "mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_products"

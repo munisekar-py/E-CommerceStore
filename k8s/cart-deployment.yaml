@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-service
+  template:
+    metadata:
+      labels:
+        app: cart-service
+    spec:
+      containers:
+        - name: cart
+          image: munisekar/cart-service:latest
+          ports:
+            - containerPort: 3003
+          env:
+            - name: MONGODB_URI
+              value: "mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_carts" 
+            - name: REACT_APP_PRODUCT_SERVICE_URL
+              value: "http://localhost:3002"

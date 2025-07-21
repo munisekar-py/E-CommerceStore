@@ -47,22 +47,55 @@ pipeline {
       }
     }
 
-    stage('Deploy to EKS') {
+
+
+    stage('Configure kubeconfig') {
       steps {
         sh '''
-        aws eks update-kubeconfig --name $CLUSTER_NAME --region $AWS_REGION
-        kubectl apply -f k8s/
+          aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
         '''
       }
     }
-  }
 
-  post {
-    failure {
-      echo 'Build Failed!'
+    stage('Deploy Backend Services to EKS') {
+      steps {
+        sh '''
+          kubectl apply -f k8s/user-deployment.yaml
+          kubectl apply -f k8s/user-service.yaml
+          kubectl apply -f k8s/product-service.yaml
+          kubectl apply -f k8s/cart-service.yaml
+          kubectl apply -f k8s/order-service.yaml
+        '''
+      }
     }
-    success {
-      echo 'Pipeline completed successfully!'
+
+    stage('Deploy Ingress for Backend') {
+      steps {
+        sh '''
+          kubectl apply -f k8s/backend-ingress.yaml
+        '''
+      }
     }
-  }
+
+    stage('Deploy Frontend') {
+      steps {
+        sh '''
+          kubectl apply -f k8s/frontend-deployment.yaml
+          kubectl apply -f k8s/frontend-service.yaml
+          kubectl apply -f k8s/frontend-ingress.yaml
+        '''
+      }
+    }
+    post {
+        failure {
+            echo 'Build Failed!'
+         }
+        success {
+            echo 'Pipeline completed successfully!'
+            }
+        }
+    }
 }
+
+
+

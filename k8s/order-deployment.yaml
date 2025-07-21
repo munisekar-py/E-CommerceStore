@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order
+          image: munisekar/order-service:latest
+          ports:
+            - containerPort: 3004
+          env:
+            - name: MONGODB_URI
+              value: "mongodb+srv://munisheak:r2V7267uMR1qUvRt@munish-travel-mem.sz1p7kc.mongodb.net/ecommerce_orders"
+            - name: REACT_APP_USER_SERVICE_URL
+              value: "http://localhost:3001"
+            - name: REACT_APP_PRODUCT_SERVICE_URL
+              value: "http://localhost:3002"
+            - name: REACT_APP_CART_SERVICE_URL
+              value: "http://localhost:3003"
